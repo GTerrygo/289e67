@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const addMessageToStore = (state, payload) => {
+  //if the message is from other user and unread, update in server
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   if (sender !== null) {
@@ -8,18 +9,18 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
-      unreadCount: !message.isRead && !message.messageFromSelf ? 1 : 0
+      unreadCount: !message.isRead && message.senderId === sender.id ? 1 : 0
     };
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
-
+  
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
       const convoCopy = {...convo}
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
-      convoCopy.unreadCount = !message.isRead && !message.messageFromSelf ? convoCopy.unreadCount + 1 : convoCopy.unreadCount
+      convoCopy.unreadCount = !message.isRead && message.senderId === convoCopy.otherUser.id ? convoCopy.unreadCount + 1 : convoCopy.unreadCount
       return convoCopy;
     } else {
       return convo;
