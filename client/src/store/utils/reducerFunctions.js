@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
@@ -6,6 +8,7 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      unreadCount: !message.isRead && !message.messageFromSelf ? 1 : 0
     };
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
@@ -16,6 +19,7 @@ export const addMessageToStore = (state, payload) => {
       const convoCopy = {...convo}
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
+      convoCopy.unreadCount = !message.isRead && !message.messageFromSelf ? convoCopy.unreadCount + 1 : convoCopy.unreadCount
       return convoCopy;
     } else {
       return convo;
@@ -80,3 +84,22 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const clearUnReadCount = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = {...convo}
+      if(convoCopy.unreadCount > 0){
+          const data = {
+            conversationId:conversationId,
+            senderId:convoCopy.otherUser.id
+          }
+          axios.post("/api/messages/read",data)
+      }
+      convoCopy.unreadCount = 0;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  })
+}

@@ -99,7 +99,7 @@ export const postMessage = (body) => async (dispatch) => {
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
-      dispatch(setNewMessage(data.message));
+      dispatch(setNewMessage({...data.message,messageFromSelf:true}));
     }
     sendMessage(data, body);
   } catch (error) {
@@ -115,3 +115,12 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+// export const setActiveChatAndClearUnread = (id, conversationId, unreadCount) => async (dispatch) => {
+//   try {
+//     if(unreadCount > 0) axios.get(`/api/users/${conversationId}`);
+//     dispatch(setActiveChat(id, conversationId, unreadCount));
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };

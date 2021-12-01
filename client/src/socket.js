@@ -1,3 +1,4 @@
+import axios from "axios";
 import io from "socket.io-client";
 import store from "./store";
 import {
@@ -19,6 +20,12 @@ socket.on("connect", () => {
     store.dispatch(removeOfflineUser(id));
   });
   socket.on("new-message", (data) => {
+    const activedConversationId = store.getState().activeConversation.conversationId
+    if(activedConversationId === data.message.conversationId){
+      data.message.isRead = true;
+      //update message status in server
+      axios.post("/api/messages/read",{messageId:data.message.id})
+    }
     store.dispatch(setNewMessage(data.message, data.sender));
   });
 });
