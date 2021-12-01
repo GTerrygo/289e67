@@ -115,12 +115,3 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
-
-// export const setActiveChatAndClearUnread = (id, conversationId, unreadCount) => async (dispatch) => {
-//   try {
-//     if(unreadCount > 0) axios.get(`/api/users/${conversationId}`);
-//     dispatch(setActiveChat(id, conversationId, unreadCount));
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
