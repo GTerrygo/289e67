@@ -39,7 +39,6 @@ def logout(sid, user_id):
 
 @sio.on("read-message")
 def read_message(sid, message):
-    print(message)
     sio.emit(
         "read-message",
         {"messageId": message["messageId"], "conversationId": message["conversationId"]},
