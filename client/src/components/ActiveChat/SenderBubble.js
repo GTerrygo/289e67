@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     background: "#F4F6FA",
     borderRadius: "10px 10px 0 10px"
   },
-  avatorUnderMessage: {
+  avatarUnderMessage: {
     width: 20,
     height: 19.35,
     marginTop: 9
@@ -34,15 +34,15 @@ const useStyles = makeStyles(() => ({
 
 const SenderBubble = (props) => {
   const classes = useStyles();
-  const { time, text, avatorUnderMessage, otherUserAvatar } = props;
+  const { time, text, avatarUnderMessage, otherUserAvatar } = props;
   return (
     <Box className={classes.root}>
       <Typography className={classes.date}>{time}</Typography>
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
-      {avatorUnderMessage ? 
-      <Avatar alt="Remy Sharp" src={otherUserAvatar} className={classes.avatorUnderMessage} alt="avatar"/>: ''}
+      {avatarUnderMessage ? 
+      <Avatar alt="Remy Sharp" src={otherUserAvatar} className={classes.avatarUnderMessage} alt="avatar"/>: ''}
     </Box>
   );
 };

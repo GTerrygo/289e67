@@ -17,7 +17,7 @@ const Messages = (props) => {
       {messages.map((message) => {
         const time = moment(message.createdAt).format("h:mm");
         return message.senderId === userId ? (
-          <SenderBubble key={message.id} text={message.text} time={time} otherUserAvatar={otherUser.avatar} avatorUnderMessage={latestMessageId===message.id && message.isRead}/>
+          <SenderBubble key={message.id} text={message.text} time={time} otherUserAvatar={otherUser.avatar} avatarUnderMessage={latestMessageId===message.id && message.isRead}/>
         ) : (
           <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
         );

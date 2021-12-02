@@ -6,22 +6,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     marginRight: "6.75%",
-  },
-  rectangle: {
-    background: "#3F92FF",
-    borderRadius: "10px",
-    padding:"3px 7px",
-  },
-  dot: {
-    height: "14px",
-    fontFamily: "Open Sans",
-    fontStyle: "normal",
-    fontWeight: "bold",
-    fontSize: "10px",
-    lineHeight: "14px",
-    /* identical to box height */
-    letterSpacing: "-0.5px",
-    color: "#FFFFFF",
   }
 }));
 
