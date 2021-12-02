@@ -50,7 +50,7 @@ class Messages(APIView):
             return HttpResponse(status=500)
 
 class ReadMessages(APIView):
-    def post(self, request):
+    def patch(self, request):
         try:
             user = get_user(request)
 
@@ -60,11 +60,10 @@ class ReadMessages(APIView):
             conversation_id = body.get("conversationId")
             sender_id = body.get("senderId")
             message_id = body.get("messageId")
-            updatedCount = 0
             if message_id:
-                updatedCount = Message.objects.filter(id=message_id).update(isRead=True)
+                update = Message.objects.filter(id=message_id).update(isRead=True)
             else:
-                updatedCount = Message.objects.filter(senderId=sender_id, conversation=conversation_id, isRead=False).update(isRead=True)
-            return JsonResponse({"message": "read success","updatedCount":updatedCount})
+                update = Message.objects.filter(senderId=sender_id, conversation=conversation_id, isRead=False).update(isRead=True)
+            return HttpResponse(status=204)
         except Exception as e:
             return HttpResponse(status=500)

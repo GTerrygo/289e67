@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@material-ui/core";
+import { Badge, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,9 +33,11 @@ const UnreadDot = (props) => {
   return (
     <Box className={classes.root}>
         {unreadCount === 0 || !unreadCount ? '':
-        <div className={classes.rectangle}>
-          <div className={classes.dot}>{unreadCount}</div>
-        </div>}
+        // <div className={classes.rectangle}>
+        //   <div className={classes.dot}>{unreadCount}</div>
+        // </div>
+        <Badge badgeContent={unreadCount} color="primary"></Badge>
+      }
     </Box>
   );
 };

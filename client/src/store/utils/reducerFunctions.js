@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const addMessageToStore = (state, payload) => {
   const { message, sender } = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
@@ -10,7 +8,7 @@ export const addMessageToStore = (state, payload) => {
       messages: [message],
       unreadCount: !message.isRead && message.senderId === sender.id ? 1 : 0
     };
-    newConvo.latestMessageText = message.text;
+    newConvo.latestMessage = message;
     return [newConvo, ...state];
   }
 
@@ -18,7 +16,7 @@ export const addMessageToStore = (state, payload) => {
     if (convo.id === message.conversationId) {
       const convoCopy = {...convo}
       convoCopy.messages.push(message);
-      convoCopy.latestMessageText = message.text;
+      convoCopy.latestMessage = message;
       convoCopy.unreadCount = !message.isRead && message.senderId === convoCopy.otherUser.id ? convoCopy.unreadCount + 1 : convoCopy.unreadCount
       return convoCopy;
     } else {
@@ -63,7 +61,7 @@ export const addSearchedUsersToStore = (state, users) => {
   users.forEach((user) => {
     // only create a fake convo if we don't already have a convo with this user
     if (!currentUsers[user.id]) {
-      let fakeConvo = { otherUser: user, messages: [] };
+      let fakeConvo = { otherUser: user, messages: [], latestMessage: [] };
       newState.push(fakeConvo);
     }
   });
@@ -77,7 +75,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       const convoCopy = {...convo}
       convoCopy.id = message.conversationId;
       convoCopy.messages.push(message);
-      convoCopy.latestMessageText = message.text;
+      convoCopy.latestMessage = message;
       return convoCopy;
     } else {
       return convo;
@@ -90,11 +88,11 @@ export const clearUnReadCount = (state, conversationId) => {
     if (convo.id === conversationId) {
       const convoCopy = {...convo}
       if(convoCopy.unreadCount > 0){
-          const data = {
-            conversationId:conversationId,
-            senderId:convoCopy.otherUser.id
-          }
-          axios.post("/api/messages/read",data)
+          convoCopy.messages.forEach((message)=>{
+            if(!message.isRead && message.senderId === convoCopy.otherUser.id){
+              message.isRead = true
+            }
+          })
       }
       convoCopy.unreadCount = 0;
       return convoCopy;
@@ -102,4 +100,26 @@ export const clearUnReadCount = (state, conversationId) => {
       return convo;
     }
   })
+}
+
+export const updateMessageRead = (state, payload) => {
+  return state.map((convo) => {
+    if (convo.id === payload.conversationId) {
+      const convoCopy = {...convo}
+      for(let i=convoCopy.messages.length-1; i>=0 ;i--){
+        if(convoCopy.messages[i].id === payload.messageId){
+          convoCopy.messages[i].isRead = true
+          break
+        }
+        //update all messages form other user as read
+        if(payload.messageId === -1 && convoCopy.messages[i].senderId !== convoCopy.otherUser.id){
+          if(convoCopy.messages[i].isRead) break
+          convoCopy.messages[i].isRead = true
+        }
+      }
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  }); 
 }
