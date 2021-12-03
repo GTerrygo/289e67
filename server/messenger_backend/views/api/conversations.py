@@ -32,18 +32,20 @@ class Conversations(APIView):
             )
 
             conversations_response = []
-
             for convo in conversations:
+                unread_count = Message.objects.filter(Q(conversation=convo.id) & Q(isRead=False) & ~Q(senderId=user_id)).count()
+                messages = []
                 convo_dict = {
                     "id": convo.id,
+                    "unreadCount": unread_count,
                     "messages": [
-                        message.to_dict(["id", "text", "senderId", "createdAt"])
+                        message.to_dict(["id", "text", "senderId", "createdAt", "isRead"])
                         for message in convo.messages.all()
-                    ],
+                    ]
                 }
 
                 # set properties for notification count and latest message preview
-                convo_dict["latestMessageText"] = convo_dict["messages"][-1]["text"]
+                convo_dict["latestMessage"] = convo_dict["messages"][-1]
 
                 # set a property "otherUser" so that frontend will have easier access
                 user_fields = ["id", "username", "photoUrl"]

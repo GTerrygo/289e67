@@ -1,4 +1,5 @@
 export { default as ChatContent } from "./ChatContent";
+export { default as UnreadDot } from "./UnreadDot";
 export { default as CurrentUser } from "./CurrentUser";
 export { default as Search } from "./Search";
 export { default as Sidebar } from "./Sidebar";

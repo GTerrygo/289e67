@@ -1,5 +1,7 @@
 import axios from "axios";
+import store from "..";
 import socket from "../../socket";
+import { setActiveChat } from "../activeConversation";
 import {
   gotConversations,
   addConversation,
@@ -115,3 +117,44 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const readMessages = (data) =>{
+  return axios.patch("/api/messages/read",data)
+}
+
+export const informUserMessageRead = (message)=>{
+  socket.emit("read-message", {
+    messageId: message.id,
+    conversationId: message.conversationId
+  });
+}
+
+export const setAscActiveChat = (conversation, unreadCount) => async (dispatch) => {
+    try{
+      if(unreadCount > 0){
+        //read message
+        readMessages({conversationId:conversation.id, senderId:conversation.otherUser.id})
+        //inform user read meessage
+        informUserMessageRead({id:-1,conversationId:conversation.id})
+      }
+      //dispatch
+      dispatch(setActiveChat(conversation.otherUser.username, conversation.id))
+    }catch (error){
+      console.error(error)
+    }
+}
+
+export const acceptNewMessage = (data) => async (dispatch) => {
+  try{
+    const activedConversationId = store.getState().activeConversation.conversationId
+    if(activedConversationId === data.message.conversationId){
+      data.message.isRead = true;
+      //update message status in server
+      readMessages({messageId:data.message.id})
+      informUserMessageRead(data.message)
+    }
+    dispatch(setNewMessage(data.message, data.sender))
+  }catch (error){
+    console.error(error)
+  }
+}

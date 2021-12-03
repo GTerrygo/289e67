@@ -18,22 +18,26 @@ const useStyles = makeStyles((theme) => ({
     color: "#9CADC8",
     letterSpacing: -0.17,
   },
+  activedText: {
+    fontWeight: "600 !important",
+    color:"#000000",
+  }
 }));
 
 const ChatContent = (props) => {
   const classes = useStyles();
 
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
-
+  const { latestMessage, otherUser } = conversation;
+  const isActived = !latestMessage.isRead && (latestMessage.senderId === otherUser.id)
   return (
     <Box className={classes.root}>
       <Box>
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
-          {latestMessageText}
+        <Typography className={[classes.previewText, isActived?classes.activedText:'']} >
+          {latestMessage.text}
         </Typography>
       </Box>
     </Box>

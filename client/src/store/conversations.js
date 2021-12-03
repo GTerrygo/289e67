@@ -4,6 +4,8 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
+  clearUnReadCount,
+  updateMessageRead
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -15,7 +17,8 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
-
+const SET_ACTIVE_CHAT = "SET_ACTIVE_CHAT";
+const UPDATE_MESSAGE_READ = "UPDATE_MESSAGE_READ";
 // ACTION CREATORS
 
 export const gotConversations = (conversations) => {
@@ -67,6 +70,12 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
+export const noticeReadMessage = (messageId, conversationId) => {
+  return {
+    type:UPDATE_MESSAGE_READ,
+    payload:{messageId, conversationId}
+  }
+}
 // REDUCER
 
 const reducer = (state = [], action) => {
@@ -91,6 +100,10 @@ const reducer = (state = [], action) => {
         action.payload.recipientId,
         action.payload.newMessage
       );
+    case SET_ACTIVE_CHAT:
+      return clearUnReadCount(state, action.conversationId);
+    case UPDATE_MESSAGE_READ:
+      return updateMessageRead(state, action.payload)
     default:
       return state;
   }
