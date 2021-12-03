@@ -41,8 +41,8 @@ const SenderBubble = (props) => {
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
-      {avatarUnderMessage ? 
-      <Avatar alt="Remy Sharp" src={otherUserAvatar} className={classes.avatarUnderMessage} alt="avatar"/>: ''}
+      {avatarUnderMessage && 
+      <Avatar src={otherUserAvatar} className={classes.avatarUnderMessage} alt="avatar" />}
     </Box>
   );
 };

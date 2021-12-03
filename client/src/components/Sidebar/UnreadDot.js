@@ -17,7 +17,7 @@ const UnreadDot = (props) => {
   return (
     <Box className={classes.root}>
         {unreadCount === 0 || !unreadCount ? '':
-        <Badge badgeContent={unreadCount} color="primary"></Badge>
+        <Badge badgeContent={unreadCount} color="primary" />
       }
     </Box>
   );
