@@ -20,7 +20,7 @@ const UnreadDot = (props) => {
         // <div className={classes.rectangle}>
         //   <div className={classes.dot}>{unreadCount}</div>
         // </div>
-        <Badge badgeContent={unreadCount} color="primary"></Badge>
+        <Badge badgeContent={unreadCount} color="primary" />
       }
     </Box>
   );
