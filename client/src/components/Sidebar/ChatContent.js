@@ -36,7 +36,7 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={[classes.previewText, isActived?classes.activedText:'']} style={{fontWeight:400}}>
+        <Typography className={[classes.previewText, isActived?classes.activedText:'']} >
           {latestMessage.text}
         </Typography>
       </Box>
